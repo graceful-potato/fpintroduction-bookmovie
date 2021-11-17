@@ -10,7 +10,6 @@ import App (AppT(..), Config)
 import API (BookMovieAPI, bookMovieAPI)
 import Handlers (getTimetable, getSeats, postPreliminary)
 import Utils (toServerError)
-
 {-
   Для сервера мы используем библиотеку servant-server. Которая предоставляет нам
   трансформер `ServerT`, где первым параметром идет тип, описывающий наше API. В нашем случае
@@ -56,6 +55,12 @@ convertApp config app = catchErrors $ runReaderT (runApp app) config
     errHandler = C.Handler $ \(SomeException e) -> do
       print e
       pure $ Left $ toServerError $ displayException e
+
+    jsonErrHandler :: C.Handler IO (Either ServerError a)
+    jsonErrHandler = C.Handler $ \e@ServerError { errBody = errBody } -> do
+      print $ "Error: " <> errBody
+      pure $ Left e
+
     catchErrors :: IO a -> S.Handler a
     catchErrors act = S.Handler $ ExceptT $
-      flip catches [errHandler] (act >>= return . Right)
+      catches (act >>= return . Right) [jsonErrHandler, errHandler]
