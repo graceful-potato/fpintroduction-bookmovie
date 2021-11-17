@@ -37,8 +37,8 @@ newtype BookingId = BookingId
 data Booking = Booking
   { bookingId :: BookingId
   , seatId :: SeatId
-  , isPreliminary :: Bool
   , timeSlotId :: TimeSlotId
+  , isPreliminary :: Bool
   , createdAt :: UTCTime
   } deriving (Eq, Show, Generic)
 --                      ^^^^^^^
