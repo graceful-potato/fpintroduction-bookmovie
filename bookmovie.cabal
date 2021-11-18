@@ -12,6 +12,7 @@ library
                      , API.Timetable
                      , API.Preliminary
                      , API.Checkout
+                     , API.Refund
                      , App
                      , DB.Booking
                      , DB.DTO.Booking
@@ -22,6 +23,7 @@ library
                      , DB.Preliminary
                      , DB.Internal
                      , DB.DTO.Checkout
+                     , DB.DTO.Refund
                      , Runner
                      , Handlers
                      , Server

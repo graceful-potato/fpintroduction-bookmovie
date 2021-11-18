@@ -4,6 +4,7 @@ module API
   , module API.Timetable
   , module API.Preliminary
   , module API.Checkout
+  , module API.Refund
   -- ^ экспортируем модули, чтобы их содержимое было доступно вместе с модулем `API`
   ) where
 
@@ -11,6 +12,7 @@ import Servant
 import API.Timetable
 import API.Preliminary
 import API.Checkout
+import API.Refund
 
 {-
   API тип всего приложения, который описывает API методы.
@@ -23,6 +25,7 @@ type BookMovieAPI
   = TimetableApi
   :<|> PreliminaryAPI
   :<|> CheckoutAPI
+  :<|> RefundAPI
 
 {-
   Proxy — это особенный тип, который не содержит данных.

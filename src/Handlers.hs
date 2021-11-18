@@ -12,6 +12,7 @@ import DB.Seat
 import DB.Preliminary
 import DB.Booking
 import DB.DTO.Checkout
+import DB.DTO.Refund
 
 getTimetable :: MonadIO m => AppT m [TimeSlot]
 getTimetable = getAllMoviesTimetable
@@ -31,3 +32,7 @@ postPreliminary msId seatId = do
 postCheckout :: MonadIO m => BookingId -> AppT m Checkout
 postCheckout bookingId = do
   makeCheckout bookingId
+
+deleteBooking :: MonadIO m => BookingId -> AppT m Refund
+deleteBooking bookingId = do
+  makeRefund bookingId

@@ -58,7 +58,3 @@ addBooking conn msId seatId = do
   case result of
     [] -> throwJSONError err404 (JSONError "Booking is not found")
     (x:_) -> pure x
-
-deleteBooking :: Connection -> Booking -> IO ()
-deleteBooking conn booking = do
-  execute conn "DELETE FROM bookings WHERE id = ?" (bookingId booking)

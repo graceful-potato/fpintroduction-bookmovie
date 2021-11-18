@@ -6,6 +6,7 @@ where
 
 import DB.DTO.Booking
 import DB.DTO.Checkout
+import DB.DTO.Refund
 import DB.Internal
 import Data.Time.Clock
 import Database.SQLite.Simple
@@ -27,6 +28,19 @@ makeCheckout bookingId = runSQL $ \conn -> do
   case checkout of
     [] -> throwJSONError err403 (JSONError "Something went wrong")
     (result:_) -> pure result
+
+makeRefund :: DBMonad m => BookingId -> m Refund
+makeRefund bookingId = runSQL $ \conn -> do
+  booking <- query conn "SELECT * FROM bookings WHERE id = ?" bookingId :: IO [Booking]
+  case booking of
+    [] -> throwJSONError err404 (JSONError "Booking not found")
+    (result:_) -> do
+      deleteBooking conn result
+      pure $ Refund "Booking has been canceled"
+
+deleteBooking :: Connection -> Booking -> IO ()
+deleteBooking conn booking = do
+  execute conn "DELETE FROM bookings WHERE id = ?" (DB.DTO.Booking.bookingId booking)
 
 canCheckout :: UTCTime -> [Booking] -> IO ()
 canCheckout _ [] = throwJSONError err404 (JSONError "Booking not found")
