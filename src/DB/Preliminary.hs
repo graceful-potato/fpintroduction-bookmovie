@@ -23,13 +23,13 @@ createPreliminary
   -> SeatId
   -> m Booking
 createPreliminary msId seatId = runSQL $ \conn -> do
-  timeSlot <- query conn "SELECT * FROM timetable where id = ?" msId :: IO [TimeSlot]
+  timeSlot <- query conn "SELECT * FROM timetable WHERE id = ?" msId :: IO [TimeSlot]
   checkTimeSlot timeSlot
-  seat <- query conn "SELECT * FROM seats where id = ? and available = true" seatId :: IO [Seat]
+  seat <- query conn "SELECT * FROM seats WHERE id = ? and available = true" seatId :: IO [Seat]
   checkSeat seat
-  booking <- query conn "SELECT * FROM bookings where time_slot_id = ? and seat_id = ?" (msId, seatId) :: IO [Booking]
-  time <- fmap (addUTCTime (-600)) getCurrentTime
-  expiredBooking <- checkBooking time booking
+  booking <- query conn "SELECT * FROM bookings WHERE time_slot_id = ? and seat_id = ?" (msId, seatId) :: IO [Booking]
+  currTime <- getCurrentTime
+  expiredBooking <- checkBooking currTime booking
   case expiredBooking of
     Nothing -> addBooking conn msId seatId
     Just expBooking -> do
@@ -46,19 +46,19 @@ checkSeat _ = pure ()
 
 checkBooking :: UTCTime -> [Booking] -> IO (Maybe Booking)
 checkBooking _ [] = pure Nothing
-checkBooking time (booking:_)
+checkBooking currTime (booking:_)
   | not $ isPreliminary booking = throwJSONError err403 (JSONError "Seat already taken")
-  | createdAt booking > time = throwJSONError err403 (JSONError "Seat already reserved")
+  | isReservationActive currTime booking = throwJSONError err403 (JSONError "Seat already reserved")
   | otherwise = pure $ Just booking
 
 addBooking :: Connection -> TimeSlotId -> SeatId -> IO Booking
 addBooking conn msId seatId = do
   execute conn "INSERT INTO bookings (seat_id, time_slot_id, is_preliminary) values (?, ?, true)" (seatId, msId)
-  result <- query conn "SELECT id, seat_id, time_slot_id, is_preliminary, created_at FROM bookings where time_slot_id = ? and seat_id = ?" (msId, seatId)
+  result <- query conn "SELECT id, seat_id, time_slot_id, is_preliminary, created_at FROM bookings WHERE time_slot_id = ? and seat_id = ?" (msId, seatId)
   case result of
     [] -> throwJSONError err404 (JSONError "Booking is not found")
     (x:_) -> pure x
 
 deleteBooking :: Connection -> Booking -> IO ()
 deleteBooking conn booking = do
-  execute conn "DELETE FROM bookings where id = ?" (bookingId booking)
+  execute conn "DELETE FROM bookings WHERE id = ?" (bookingId booking)
