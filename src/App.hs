@@ -2,6 +2,7 @@ module App where
 
 import Control.Monad.Except
 import Control.Monad.Reader
+import Control.Concurrent.STM
 
 -- Тип обертка для пути к базе данных
 newtype DatabasePath = DatabasePath { unDatabasePath :: String } deriving Show
@@ -9,6 +10,7 @@ newtype DatabasePath = DatabasePath { unDatabasePath :: String } deriving Show
 -- Конфигурация приложения
 data Config = Config
   { dbPath :: DatabasePath
+  , reqCounter :: TVar Int
   }
 
 {-

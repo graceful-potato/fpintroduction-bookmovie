@@ -6,6 +6,7 @@ import System.IO
 
 import App
 import Server
+import Control.Concurrent.STM
 
 {-
   Данный модуль содержит главную функцию, которая запускает web-приложение.
@@ -22,6 +23,7 @@ run :: IO ()
 -- Выполняет функцию, передавая ей на вход logger
 --    vvvvvvvvvvvvvvv
 run = withStdoutLogger $ \logger -> do
+  counter <- newTVarIO 0
   let
     port = 3000
     waiSettings =
@@ -34,8 +36,10 @@ run = withStdoutLogger $ \logger -> do
     -- Создаём конфиг
     appConfig = Config
       { dbPath = DatabasePath "bookmovie.db"
+      , reqCounter = counter
       }
   -- запускаем приложение с помощью wai
+
   runSettings waiSettings (mkApplication appConfig)
   --                       ^^^^^^^^^^^^^
   -- Функция из модуля Server, которая создаёт значение,

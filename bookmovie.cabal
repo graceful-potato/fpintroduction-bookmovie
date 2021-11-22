@@ -13,6 +13,7 @@ library
                      , API.Preliminary
                      , API.Checkout
                      , API.Refund
+                     , API.Stats
                      , App
                      , DB.Booking
                      , DB.DTO.Booking
@@ -32,6 +33,7 @@ library
                      , aeson >= 1.4.7.0
                      , bytestring
                      , mtl >= 2.2.0
+                     , stm >= 2.5.0.1
                      , exceptions
                      , servant
                      , servant-server
