@@ -8,11 +8,11 @@ import GHC.Generics (Generic)
 
 type RefundAPI = "api" :> "refund"
               :> Capture "id" BookingId
-              :> Get '[JSON] Refund
+              :> Post '[JSON] Refund
               :<|>
               "api" :> "refund"
               :> ReqBody '[JSON] [BookingId]
-              :> Get '[JSON] [Refund]
+              :> Post '[JSON] [Refund]
 
 data Refund = Refund { status :: Text } deriving (Eq, Show, Generic)
 

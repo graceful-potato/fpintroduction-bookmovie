@@ -14,7 +14,7 @@ type PreliminaryAPI
     :> Capture "id" TimeSlotId
     :> "preliminary-booking"
     :> Capture "id" SeatId
-    :> Get '[JSON] BookingId
+    :> Post '[JSON] BookingId
 --  ^   ^     ^       ^
 --  |   |     |   Тип возвращаемого значения
 --  |   |  Cписок используемых content-type'ов https://hackage.haskell.org/package/servant-0.17/docs/Servant-API-ContentTypes.html
