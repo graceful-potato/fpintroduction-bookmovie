@@ -45,12 +45,22 @@ createCheckout conn bookingId = do
 
 makeRefund :: DBMonad m => BookingId -> m Refund
 makeRefund bookingId = runSQL $ \conn -> do
+  booking <- fetchBooking conn bookingId
+  deleteBooking conn booking
+  pure $ Refund $ "Booking (" <> T.pack (show (unBookingId bookingId)) <> ") has been canceled"
+
+makeBatchRefund :: DBMonad m => [BookingId] -> m [Refund]
+makeBatchRefund bookingIds = runSQL $ \conn -> do
+  bookings <- mapM (fetchBooking conn) bookingIds
+  mapM_ (deleteBooking conn) bookings
+  pure $ fmap (\booking -> Refund $ "Booking (" <> showBookingId booking <> ") has been canceled") bookings
+
+fetchBooking :: Connection -> BookingId -> IO Booking
+fetchBooking conn bookingId = do
   booking <- query conn "SELECT * FROM bookings WHERE id = ?" bookingId :: IO [Booking]
   case booking of
-    [] -> throwJSONError err404 (JSONError "Booking not found")
-    (result:_) -> do
-      deleteBooking conn result
-      pure $ Refund "Booking has been canceled"
+    [] -> throwJSONError err404 $ JSONError ("Booking (" <> T.pack (show (unBookingId bookingId)) <> ") not found")
+    (result:_) -> pure result
 
 deleteBooking :: Connection -> Booking -> IO ()
 deleteBooking conn booking = do

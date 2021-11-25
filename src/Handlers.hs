@@ -52,6 +52,11 @@ deleteBooking bookingId = do
   updateCounter
   makeRefund bookingId
 
+deleteBatchBooking :: MonadIO m => [BookingId] -> AppT m [Refund]
+deleteBatchBooking bookingIds = do
+  updateCounter
+  makeBatchRefund bookingIds
+
 getStats :: MonadIO m => AppT m Stats
 getStats = do
   Config { reqCounter = counter } <- ask
