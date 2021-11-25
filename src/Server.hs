@@ -8,7 +8,7 @@ import Servant as S
 
 import App (AppT(..), Config)
 import API (BookMovieAPI, bookMovieAPI)
-import Handlers (getTimetable, getSeats, postPreliminary, postCheckout, deleteBooking, getStats, postBatchPreliminary)
+import Handlers (getTimetable, getSeats, postPreliminary, postCheckout, deleteBooking, getStats, postBatchPreliminary, postBatchCheckout)
 import Utils (toServerError)
 {-
   Для сервера мы используем библиотеку servant-server. Которая предоставляет нам
@@ -22,7 +22,8 @@ bookingServer :: MonadIO m => ServerT BookMovieAPI (AppT m)
 bookingServer = (getTimetable
   :<|> getSeats)
   :<|> postPreliminary
-  :<|> postCheckout
+  :<|> (postCheckout
+  :<|> postBatchCheckout)
   :<|> deleteBooking
   :<|> getStats
   :<|> postBatchPreliminary

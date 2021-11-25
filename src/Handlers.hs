@@ -42,6 +42,11 @@ postCheckout bookingId = do
   updateCounter
   makeCheckout bookingId
 
+postBatchCheckout :: MonadIO m => [BookingId] -> AppT m [Checkout]
+postBatchCheckout bookingIds = do
+  updateCounter
+  makeBatchCheckout bookingIds
+
 deleteBooking :: MonadIO m => BookingId -> AppT m Refund
 deleteBooking bookingId = do
   updateCounter
