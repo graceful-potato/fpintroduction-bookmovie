@@ -11,11 +11,11 @@ import DB.Seat
 import DB.Preliminary
 import DB.Booking
 import DB.DTO.Checkout
-import DB.DTO.Refund
 import Control.Concurrent.STM
 import Control.Monad.Reader
 import API.Stats
 import API.BatchPreliminary
+import API.Refund
 
 getTimetable :: MonadIO m => AppT m [TimeSlot]
 getTimetable = do

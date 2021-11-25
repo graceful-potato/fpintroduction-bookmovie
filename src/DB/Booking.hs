@@ -6,7 +6,7 @@ where
 
 import DB.DTO.Booking
 import DB.DTO.Checkout
-import DB.DTO.Refund
+import API.Refund
 import DB.Internal
 import Data.Time.Clock
 import Database.SQLite.Simple

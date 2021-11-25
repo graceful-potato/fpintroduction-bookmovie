@@ -25,7 +25,6 @@ library
                      , DB.Preliminary
                      , DB.Internal
                      , DB.DTO.Checkout
-                     , DB.DTO.Refund
                      , Runner
                      , Handlers
                      , Server

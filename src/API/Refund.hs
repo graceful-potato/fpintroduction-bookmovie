@@ -1,10 +1,17 @@
 module API.Refund where
 
 import Servant.API
-import DB.Booking
-import DB.DTO.Refund
+import DB.DTO.Booking
+import Data.Text
+import Data.Aeson
+import GHC.Generics (Generic)
 
 type RefundAPI = "api" 
               :> "refund"
               :> Capture "id" BookingId
               :> Get '[JSON] Refund
+
+data Refund = Refund { status :: Text } deriving (Eq, Show, Generic)
+
+instance ToJSON Refund
+instance FromJSON Refund
