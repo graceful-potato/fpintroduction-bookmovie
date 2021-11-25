@@ -8,7 +8,7 @@ import Servant as S
 
 import App (AppT(..), Config)
 import API (BookMovieAPI, bookMovieAPI)
-import Handlers (getTimetable, getSeats, postPreliminary, postCheckout, deleteBooking, getStats)
+import Handlers (getTimetable, getSeats, postPreliminary, postCheckout, deleteBooking, getStats, postBatchPreliminary)
 import Utils (toServerError)
 {-
   Для сервера мы используем библиотеку servant-server. Которая предоставляет нам
@@ -25,6 +25,7 @@ bookingServer = (getTimetable
   :<|> postCheckout
   :<|> deleteBooking
   :<|> getStats
+  :<|> postBatchPreliminary
 {-
   Функция, которая создает servant приложение `Application`.
 -}

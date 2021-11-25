@@ -6,6 +6,7 @@ module API
   , module API.Checkout
   , module API.Refund
   , module API.Stats
+  , module API.BatchPreliminary
   -- ^ экспортируем модули, чтобы их содержимое было доступно вместе с модулем `API`
   ) where
 
@@ -15,6 +16,7 @@ import API.Preliminary
 import API.Checkout
 import API.Refund
 import API.Stats
+import API.BatchPreliminary
 
 {-
   API тип всего приложения, который описывает API методы.
@@ -29,6 +31,7 @@ type BookMovieAPI
   :<|> CheckoutAPI
   :<|> RefundAPI
   :<|> StatsAPI
+  :<|> BatchPreliminaryAPI
 
 {-
   Proxy — это особенный тип, который не содержит данных.

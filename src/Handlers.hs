@@ -15,6 +15,7 @@ import DB.DTO.Refund
 import Control.Concurrent.STM
 import Control.Monad.Reader
 import API.Stats
+import API.BatchPreliminary
 
 getTimetable :: MonadIO m => AppT m [TimeSlot]
 getTimetable = do
@@ -51,6 +52,11 @@ getStats = do
   Config { reqCounter = counter } <- ask
   result <- liftIO $ readTVarIO counter
   pure $ Stats result
+
+postBatchPreliminary :: MonadIO m => BookingPayload -> AppT m [BookingId]
+postBatchPreliminary payload = do
+  result <- createBatchPreliminary payload
+  pure $ fmap DB.Booking.bookingId result
 
 updateCounter :: MonadIO m => AppT m ()
 updateCounter = do
